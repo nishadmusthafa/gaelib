@@ -24,7 +24,6 @@ from gaelib.urls import (auth_urls,
                          task_urls)
 from firebase_admin import credentials, initialize_app
 
-from gaelib.env import (get_app_or_default_prop)
 
 PARAMETER_LOGGING = get_app_or_default_prop('PARAMETER_LOGGING')
 
