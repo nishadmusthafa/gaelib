@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "fakecreds",
+  "private_key_id": "fake_id",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDDf+rtSYF0PpUi\nir65tzoA+yx7YpRd3SkiP78mdX2Q0JbOIy1EBxCA7LDMOSWcNfeGPFzwYyDZUg/9\n/U/fjzzy0jkPDPUmfUw0Va3ygTPIceC78E8bRbLxeUP/0k2Gtg0As+e49bLv15k4\n55/II6E4I6m0ul+KGnwAzU+mKlpZ1nt19JeEsHM6ZUCl3DZ6nZ+fhpdo86/4N/rC\nIiHu59SHL4ba7l9Zt0Vk6t81haErYj4qUYe+6Hpl0HscYtJbkSQ0L1R0VYTpErPV\nrPCdzJryqOO7ZYO9bjKdrB/5wPiqEc1veHNeFjN1eatPe+EUURp40G7m/2c9HKaV\njVWvRd+VAgMBAAECggEATaEUQMAA6w9UueAdJvKmUjBqs93rqzAAPuzQMu3Re/kQ\nAO+/8DTb7U3PUHDayeI2FTQP9ZZvO0xWNFVra4rduVAXvy22hN+ZLGjfRx3d2Zi6\nk/Yy+1HcYf10rncsOLM+i4pkl7HcqVdTrOBwtpDLWlby8uRUvqqQleLw3zsPIH+T\n64IYD2oKd+Suswk1Fl/ykNRKQGPh7h/T9sy6yGh3QRuzrIVBI/4rjxcsL8HfjfHo\ng2pqIEnNnUypu6ksNXlXWt2Zrt+5NQw+oF4dcoeYI5HIVPvniwOpoxLJeC7mrRsU\nt2m9xxNG0vlf2jAOULSqKPpBtpx9afLoRxefr5BH6wKBgQDwXaigNaiSUFQe98SC\nMF+wJ5/PeLxCFvqPJIbtSZYzCXF7Jx10b57pziP9uANHN22rszlF6NbA/LVWFHF3\nP+3lGQggkAgUphwVMFmay5gs30hceRhMHEZjQ5RdJ4gd5sZSEFeGp+IsIr6UJtnv\nuH8DycOKVmH2CjKTlx2vrumzrwKBgQDQNzDGcmtZZZeJg986MasJQkoyEh/Oimxt\nRuJMeaYYzTuYjhiGwkLR3qGBnzYH5G13syMfPI84G8wTzEGR+U4d1FmRqm+LI6RZ\nVhWBRBXg8t7fy/E5T/7+Ya2XiZrM9gw0mjYtGnRJXjqHa8NSE3kDddt6d2ZtUtfL\nWV9sj049+wKBgBZ+XUpo2xaeJ9EiFKSuTDYa7yymOs/ggKAmpe3Mxh6Okq0Ysvvz\neiadIOccckoW2M+JnSF6saYrv/iHPzsOo3+eARGzCN6N0PD2rlv7E4mXd5kXx/tP\nZhLh/x9clLNfpk2Fs/so+NRyh+0rWZfCZzh+iCsI/G/e8m63ZJLNRpeHAoGBAM5I\nr6EcQPCbrwuFxAYiqSIOM/XxcOOuzodhP9imeQF/a3jT5saz9YF5gScrtlsRW8bI\nipZq6DWdjI1cwuW9SkBRXr/rTIFcOXpsx/d+nfJ0jIzKv92ZPLeHzHUi1mQTrLn8\nwoni+Kyrl28NO8C4HB9qh5yIaMkM11DW5axnOgw7AoGBAIXDafgbJ2wZ/eGruSqj\nspyb8trykCbNvswyPNaqr+Tjl2mc7G8nzDjg5DSeNPmkx48KYOdVy70gmrFnghBW\nVAioVbq6DI5fKBVZgJkHyMKREjW85NRQkBWQzY0ImSYS3QUv19+PVwDH9V+7UTMw\n43GZlXIjYpJb3vij4WQ1FNsy\n-----END PRIVATE KEY-----\n",
+  "client_email": "fakeemail",
+  "client_id": "1234567890",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/fakeserviceaccount"
+}

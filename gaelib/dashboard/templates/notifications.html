@@ -1,0 +1,44 @@
+{% extends "logged_in_base.html" %}
+
+{% block app_specific_sidebar %}
+{% include sidebar_template %}
+{% endblock %}
+
+{% block content %}
+<br />
+<div id="wrapper">
+  {% if error %}
+  <div class="alert alert-danger" role="alert">{{error}}</div>
+  {% endif %}
+  <section>
+
+    <form action={{ "/" ~ dashboard_prefix ~ "/notifications" }} method="post" id="notificationsForm"
+      enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" name="title" id="title" required>
+      </div>
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea class="form-control" name="message" id="message" rows="3" required></textarea>
+      </div>
+
+
+      <div class="form-group">
+        <label for="group">Group</label>
+        <select class="form-control" name="group" id="group">
+          <option value="internal">Internal</option>
+          <option value="all">All</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="col-md-2 col-md-offset-11">
+          <button type="submit" id="notificationsFormSubmit" class="btn btn-success">Notify</button>
+        </div>
+      </div>
+
+    </form>
+  </section>
+</div>
+
+{% endblock %}

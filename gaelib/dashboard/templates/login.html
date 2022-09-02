@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div id="wrapper">
+
+  <br />
+  <br />
+  <br />
+  <a class="btn btn-success" id="loginButton">Click to Login via Google</a>
+
+</div>
+
+
+
+
+
+{% endblock %}
+
+{% block additionaljavascript %}
+<!-- <script>
+  function copyToClipboard(text) {
+    window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
+  }
+</script> -->
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "{{auth_config.firebase.api_key}}",
+    authDomain: "{{auth_config.firebase.auth_domain}}",
+    projectId: "{{auth_config.firebase.api_key}}",
+    storageBucket: "{{auth_config.firebase.storage_bucket}}",
+    messagingSenderId: "{{auth_config.firebase.messaging_sender_id}}",
+    appId: "{{auth_config.firebase.app_id}}"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>
+<script>
+  //triggered when modal is about to be shown
+  $('#loginButton').click(function (e) {
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).then(function (result) {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      var token = result.credential.accessToken;
+      // The signed-in user info.
+      var user = result.user;
+      result.user.getIdToken(true).then((token) => {
+        var userToken = token
+        $.ajax
+          ({
+            type: "POST",
+            data: {},
+            url: "/login/",
+            headers: {
+              "Authorization": "Basic " + btoa(user.uid + ":" + userToken)
+            },
+            success: function (data) {
+              location.href = '/{{dashboard_prefix}}/{{post_login_page}}'
+            },
+            error: function (error) {
+              console.log(error);
+            }
+          });
+      })
+    }).catch(function (error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      // ...
+    });
+
+  });
+</script>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    console.log("Added the login evnt listener")
+    document.cookie = 'firebaseAccessTimer=0; path=/';
+  }, false);
+</script>
+{% endblock %}

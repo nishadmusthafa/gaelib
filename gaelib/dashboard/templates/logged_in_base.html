@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+<div id="sidebar-wrapper">
+  <ul class="sidebar-nav">
+      {% block app_specific_sidebar %}
+      {% endblock %}
+      {% if dashboard_notification_admin %}
+        <li>
+            <a href="/{{dashboard_prefix}}/notifications"> Notifications</a>
+        </li>
+      {% endif %}
+      </ul>
+</div>
+{% endblock %}
+
+<script>
+  var docCookies = {
+    getItem: function (sKey) {
+      if (!sKey || !this.hasItem(sKey)) { return null; }
+      return unescape(document.cookie.replace(new RegExp("(?:^|.*;\\s*)" + escape(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*((?:[^;](?!;))*[^;]?).*"), "$1"));
+    },
+    hasItem: function (sKey) {
+      return (new RegExp("(?:^|;\\s*)" + escape(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
+    }
+  };
+
+  window.addEventListener("DOMContentLoaded", function () {
+    firebase.auth().onAuthStateChanged(function (user) {
+      var refresh = false;
+      (function poll() {
+        var dt = new Date();
+        var timeout = 55 * 60 * 1000;
+        if (docCookies.getItem('firebaseAccessTimer') - dt.getTime() < 0) {
+          refresh = true;
+        }
+
+        if (user) {
+          user.getIdToken(refresh).then(function (accessToken) {
+            if (accessToken === docCookies.getItem('firebaseAccessToken')) {
+              window.setTimeout(poll, docCookies.getItem('firebaseAccessTimer') - dt.getTime());
+            } else {
+              document.cookie = "firebaseAccessToken=" + accessToken + '; path=/';
+              document.cookie = "firebaseAccessTimer=" + (dt.getTime() + timeout) + '; path=/';
+              window.setTimeout(poll, timeout);
+            }
+            if (document.getElementById("firebaseAccessToken")) {
+              document.getElementById("firebaseAccessToken").value = accessToken;
+            }
+          });
+
+        } else {
+          console.log('user signed-out');
+          document.cookie = 'firebaseAccessTimer=0; path=/';
+          location.href = '/{{dashboard_prefix}}/login';
+        }
+      })();
+    }, function (error) {
+      console.log(error);
+      // console.log(document.cookie);
+    });
+  }, false);
+</script>
+{% block additionaljavascript %}
+{% endblock %}
+
+
+</body>
+
+</html>
