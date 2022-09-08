@@ -18,9 +18,9 @@ To be documented
 ### Running tests
 
 In your terminal make your way to the repo root
-Build the container using 
+Build the container using
 ```
-docker build -t gaelib . 
+docker build -t gaelib .
 ```
 Launch the Google datastore emulator
 ```

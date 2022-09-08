@@ -3,7 +3,7 @@
     which inherits View and has logger object
 """
 from flask import g, jsonify, request
-from flask.views import View
+from flask.views import MethodView
 from werkzeug.utils import import_string, cached_property
 
 from gaelib.auth.decorators import auth_required
@@ -30,7 +30,7 @@ class LazyView(object):
     return self.view(*args, **kwargs)
 
 
-class BaseHttpHandler(View):
+class BaseHttpHandler(MethodView):
   """ BaseView Class """
 
   def json_response(self, response_body, status, headers=None):
@@ -87,7 +87,7 @@ class BaseHttpHandler(View):
       return self.json_error("Missing Arguements: " + str(self.missing_args), 200)
 
 
-class BaseApiHandler(BaseHttpHandler):
+class BaseAPIHandler(BaseHttpHandler):
   decorators = [auth_required]
 
 
