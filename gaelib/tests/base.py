@@ -59,3 +59,26 @@ class BaseUnitTestCase(unittest.TestCase):
   def mock_flask_request(self):
     self.request_patch = patch('flask.request')
     self.request = self.request_patch.start()
+
+class BaseAuthenticatedUnitTestCase(BaseUnitTestCase):
+  def return_authorize_request(self, auth_type='firebase'):
+    return {'email': self.user.email,
+            'picture': self.user.picture,
+            'name': self.user.name,
+            }
+
+  def auth_headers(self):
+    return {
+        'Authorization': _basic_auth_str(self.user.uid, 'password'),
+    }
+
+  def setUp(self):
+    super().setUp()
+    self.authorize_request_patch = patch(
+        'gaelib.auth.auth.Auth.authorize_request')
+    self.authorize_request = self.authorize_request_patch.start()
+    self.authorize_request.side_effect = self.return_authorize_request
+
+  def tearDown(self):
+    self.authorize_request_patch.stop()
+    super().tearDown()
