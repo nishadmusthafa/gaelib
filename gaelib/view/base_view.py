@@ -44,6 +44,9 @@ class BaseHttpHandler(MethodView):
           .format(response_body=response_body))
 
     response_body = jsonify(response_body)
+    # Need to see what the best way to do this
+    # is
+    response_body.status_code = status
 
     if headers is None:
       headers = {}
