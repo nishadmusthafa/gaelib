@@ -2,7 +2,7 @@ import os
 import logging
 
 
-from flask import g, Flask, jsonify, request
+from flask import g, Flask, json, request
 from google.cloud.logging_v2.client import Client
 from google.cloud.logging_v2.handlers import CloudLoggingHandler
 from gaelib.env import (
