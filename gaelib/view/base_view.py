@@ -5,6 +5,8 @@
 from flask import g, jsonify, request
 from flask.views import MethodView
 from werkzeug.utils import import_string, cached_property
+from werkzeug.exceptions import HTTPException
+
 
 from gaelib.auth.decorators import auth_required
 from gaelib.cron.decorators import cron_validate
@@ -84,12 +86,17 @@ class BaseHttpHandler(MethodView):
 
   def validation_error(self):
     if self.missing_args:
-      return self.json_error("Missing Arguements: " + str(self.missing_args), 200)
+      return self.json_error("Missing Arguments: " + str(self.missing_args), 200)
 
 
 class BaseAPIHandler(BaseHttpHandler):
   decorators = [auth_required]
 
+  def get(self, **kwargs):
+    if not self.controller:
+      error = "No controller defined"
+      response = self.json_error(error, 400)
+      raise HTTPException(error, response)
 
 class BaseCronJobHandler(BaseHttpHandler):
   decorators = [cron_validate]

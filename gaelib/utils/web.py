@@ -2,7 +2,7 @@ import os
 import logging
 
 
-from flask import g, Flask, request
+from flask import g, Flask, jsonify, request
 from google.cloud.logging_v2.client import Client
 from google.cloud.logging_v2.handlers import CloudLoggingHandler
 from gaelib.env import (
@@ -23,6 +23,8 @@ from gaelib.urls import (auth_urls,
                          client_logger_urls,
                          task_urls)
 from firebase_admin import credentials, initialize_app
+from werkzeug.exceptions import HTTPException
+
 
 
 PARAMETER_LOGGING = get_app_or_default_prop('PARAMETER_LOGGING')
@@ -36,6 +38,19 @@ app.config['EXPLAIN_TEMPLATE_LOADING'] = True
 
 app.jinja_loader.searchpath.append(dashboard_lib_template_dir)
 
+@app.errorhandler(HTTPException)
+def handle_exception(e):
+    """Return JSON instead of HTML for HTTP errors."""
+    # start with the correct headers and status code from the error
+    response = e.get_response()
+    # replace the body with JSON
+    response.data = json.dumps({
+        "code": e.code,
+        "name": e.name,
+        "description": e.description,
+    })
+    response.content_type = "application/json"
+    return response
 
 @app.before_request
 def log_request_info():
