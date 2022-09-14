@@ -1,7 +1,6 @@
 from mock import patch, Mock
 from gaelib.auth.models import User
 from gaelib.tests.base import BaseUnitTestCase
-from gaelib.utils import web
 
 
 class BaseAuthUnitTestCase(BaseUnitTestCase):

@@ -9,22 +9,18 @@ from mock import patch
 
 
 class BaseUnitTestCase(unittest.TestCase):
-  app_for_test = None
-  client = None
+  app_for_test = web.startup(parameter_logging=True,
+                             client_logging=True,
+                             blueprint_scope='gaelib')
 
   def setUp(self):
-    if not self.app_for_test:
-      app_for_test = web.startup(parameter_logging=True,
-                                 client_logging=True)
-      self.app_for_test.testing = True
     self.client = self.app_for_test.test_client()
     self.clear_database()
 
   def tearDown(self):
     self.clear_database()
 
-  def set_app_for_test(self, app):
-    self.app_for_test = app
+
 
   def clear_database(self):
     # Nosetests use a different database and it also does not use namespace from app.yaml,

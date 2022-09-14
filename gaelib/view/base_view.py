@@ -93,9 +93,10 @@ class BaseHttpHandler(MethodView):
 
 
 class BaseAPIHandler(BaseHttpHandler):
+  controller = None
   decorators = [auth_required]
 
-  def get(self, **kwargs):
+  def validation(self):
     if not self.controller:
       error = "No controller defined"
       response = self.json_error(error, 400)
