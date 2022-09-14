@@ -1,10 +1,5 @@
 from gaelib.tests.auth.base import BaseAuthUnitTestCase
-from gaelib.auth.twilio_client import TwilioClient
 from gaelib.auth import verify
-from gaelib.auth.models import User
-from mock import patch
-from gaelib.utils import web
-from flask import g
 
 
 class VerifyTestCase(BaseAuthUnitTestCase):

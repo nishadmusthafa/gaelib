@@ -1,9 +1,7 @@
 from gaelib.tests.auth.base import BaseAuthUnitTestCase
 from gaelib.auth.decorators import auth_required, verification_required, get_login_user, access_control
 from gaelib.auth.models import User, UserRole
-from gaelib.utils import web
 from mock import Mock
-from flask import request
 import json
 
 

@@ -1,13 +1,8 @@
 from gaelib.tests.auth.base import BaseAuthUnitTestCase
-from gaelib.auth.twilio_client import TwilioClient
 from gaelib.auth import auth
-from mock import patch
-# from main import app
 import base64
 from flask import session
 from werkzeug.http import dump_cookie
-import json
-import requests
 
 
 class AuthTestCase(BaseAuthUnitTestCase):

@@ -96,11 +96,49 @@ class BaseAPIHandler(BaseHttpHandler):
   controller = None
   decorators = [auth_required]
 
-  def validation(self):
+  def validate(self, entity_id):
     if not self.controller:
       error = "No controller defined"
-      response = self.json_error(error, 400)
+      response, _, _ = self.json_error(error, 500)
       raise HTTPException(error, response)
+
+    if request.method == 'POST' and not request.content_type == 'application/json':
+      error = "POST request has no json content"
+      response, _, _ = self.json_error(error, 400)
+      raise HTTPException(error, response)
+    if entity_id and not entity_id.isnumeric():
+      error = "Entity ID does not look numeric"
+      response, _, _ = self.json_error(error, 400)
+      raise HTTPException(error, response)
+
+    self.controller.validate_fields()
+
+  def get(self, entity_id=''):
+    self.validate(entity_id)
+    if entity_id:
+      try:
+        entity = self.controller.get_entities(int(entity_id))[0]
+      except IndexError:
+        error = f"No entity with id {entity_id}"
+        response, _, _ = self.json_error(error, 400)
+        raise HTTPException(error, response)
+      return self.json_response(entity.to_json(), 200)
+    else:
+      entities = self.controller.get_entities()
+      entities = [entity.to_json() for entity in entities]
+      return self.json_response({'entities': entities}, 200)
+
+  def post(self, entity_id=''):
+    self.validate(entity_id)
+    kwargs = request.json
+    entity_id = int(entity_id) if entity_id else ''
+    entity, error = self.controller.create_or_update_entity(
+      entity_id, **kwargs)
+    if error:
+      response, _, _ = self.json_error(error, 400)
+      raise HTTPException(error, response)
+    return self.json_response(entity.to_json(), 200)
+
 
 class BaseCronJobHandler(BaseHttpHandler):
   decorators = [cron_validate]
