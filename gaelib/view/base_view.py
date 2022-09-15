@@ -67,11 +67,13 @@ class BaseHttpHandler(MethodView):
     response_dict["error_message"] = error_message
     return self.json_response(response_dict, status_code)
 
-  def json_success(self, response_dict, status_code):
+  def json_success(self, response_dict=None, status_code=200):
     """
         Updates response_dict with success=1.
         Returns the same with status code.
     """
+    if not response_dict:
+      response_dict = {}
     response_dict["success"] = 1
     return self.json_response(response_dict, status_code)
 
@@ -138,6 +140,21 @@ class BaseAPIHandler(BaseHttpHandler):
       response, _, _ = self.json_error(error, 400)
       raise HTTPException(error, response)
     return self.json_response(entity.to_json(), 200)
+
+  def delete(self, entity_id=''):
+    self.validate(entity_id)
+    if not entity_id:
+      error = "Cannot delete an entity without entity id"
+      response, _, _ = self.json_error(error, 400)
+      raise HTTPException(error, response)
+    try:
+      self.controller.delete_entity(int(entity_id))
+    except Exception as err:
+      error = f"Unexpected {err=}, {type(err)=}"
+      response, _, _ = self.json_error(error, 500)
+      raise HTTPException(error, response)
+
+    return self.json_success()
 
 
 class BaseCronJobHandler(BaseHttpHandler):

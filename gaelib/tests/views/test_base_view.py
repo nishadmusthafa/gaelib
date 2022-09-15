@@ -42,9 +42,9 @@ class SampleController():
     return True, None
 
   @staticmethod
-  def create_or_update_entity(sample_entity_id='', **kwargs):
-    if sample_entity_id:
-      sample_entity = SampleModel(key_str=sample_entity_id)
+  def create_or_update_entity(entity_id='', **kwargs):
+    if entity_id:
+      sample_entity = SampleModel(key_str=entity_id)
     else:
       sample_entity = SampleModel()
 
@@ -58,8 +58,9 @@ class SampleController():
       sample_entity.put()
     return sample_entity, errors
 
-  def delete_entity(self, sample_entity_id):
-    sample_entity = SampleModel(key_str=sample_entity_id)
+  @staticmethod
+  def delete_entity(entity_id):
+    sample_entity = SampleModel(key_str=entity_id)
     sample_entity.delete()
 
 
@@ -76,6 +77,10 @@ class SampleAPI3(BaseAPIHandler):
 
 
 class SampleAPI4(BaseAPIHandler):
+  controller = SampleController
+
+
+class SampleAPI5(BaseAPIHandler):
   controller = SampleController
 
 
@@ -109,6 +114,12 @@ api_test_urls.add_url_rule(
     view_func=LazyView(
       'gaelib.tests.views.test_base_view.SampleAPI4', 'sample_api_update_entity'),
     methods=['POST'])
+
+api_test_urls.add_url_rule(
+    '/sampleapideleteentity/<entity_id>',
+    view_func=LazyView(
+      'gaelib.tests.views.test_base_view.SampleAPI5', 'sample_api_delete_entity'),
+    methods=['DELETE'])
 
 api_test_app = web.startup(parameter_logging=True,
                            client_logging=True)
@@ -286,3 +297,29 @@ class BaseAPIHandlerTestCase(BaseAuthenticatedUnitTestCase):
     self.assertEqual(response.status_code, 200)
     self.assertTrue(response.is_json)
     self.assertEqual(response.json['string_field'], 's2')
+
+  def test_delete_entity(self):
+    """
+        Testing a fetch of single entity with id
+    """
+    self.add_user_entity(
+        name='user1', email='a@b.com', uid='user1', client_user=True)
+    s1 = SampleModel(string_field='s1')
+    s1.put()
+
+    response = self.client.get(
+        f"/sampleapigetentity/{s1.key().id}", headers=self.auth_headers())
+    self.assertEqual(response.status_code, 200)
+    self.assertTrue(response.is_json)
+    self.assertEqual(response.json['string_field'], 's1')
+
+    response = self.client.delete(
+        f"/sampleapideleteentity/{s1.key().id}", headers=self.auth_headers())
+    self.assertEqual(response.status_code, 200)
+
+    response = self.client.get(
+        f"/sampleapigetentity/{s1.key().id}", headers=self.auth_headers())
+    self.assertEqual(response.status_code, 400)
+    self.assertTrue(response.is_json)
+    self.assertEqual(response.json['error_message'],
+                     f"No entity with id {s1.key().id}")
