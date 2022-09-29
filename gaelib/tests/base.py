@@ -1,4 +1,7 @@
 import unittest
+from requests.auth import _basic_auth_str
+
+from gaelib.auth.models import User
 from gaelib.db import helpers
 from gaelib.utils import web
 from google.cloud import datastore
@@ -6,17 +9,18 @@ from mock import patch
 
 
 class BaseUnitTestCase(unittest.TestCase):
-
   app_for_test = web.startup(parameter_logging=True,
-                          client_logging=True)
+                             client_logging=True,
+                             blueprint_scope='gaelib')
 
   def setUp(self):
-    self.app_for_test.testing = True
     self.client = self.app_for_test.test_client()
     self.clear_database()
 
   def tearDown(self):
     self.clear_database()
+
+
 
   def clear_database(self):
     # Nosetests use a different database and it also does not use namespace from app.yaml,
@@ -59,3 +63,40 @@ class BaseUnitTestCase(unittest.TestCase):
   def mock_flask_request(self):
     self.request_patch = patch('flask.request')
     self.request = self.request_patch.start()
+
+
+class BaseAuthenticatedUnitTestCase(BaseUnitTestCase):
+  def return_authorize_request(self, auth_type='firebase'):
+    return {'email': self.user.email,
+            'picture': self.user.picture,
+            'name': self.user.name,
+            }
+
+  def auth_headers(self):
+    return {
+        'Authorization': _basic_auth_str(self.user.uid, 'password'),
+    }
+
+  def setUp(self):
+    super().setUp()
+    self.authorize_request_patch = patch(
+        'gaelib.auth.auth.Auth.authorize_request')
+    self.authorize_request = self.authorize_request_patch.start()
+    self.authorize_request.side_effect = self.return_authorize_request
+
+  def add_user_entity(self, name='', email='', uid='', picture='http://dp.com', client_user=False):
+    user = User()
+    user.update(
+        name=name,
+        email=email,
+        picture=picture,
+        uid=uid,
+    )
+    user.put()
+    if client_user:
+      self.user = user
+    return user
+
+  def tearDown(self):
+    self.authorize_request_patch.stop()
+    super().tearDown()

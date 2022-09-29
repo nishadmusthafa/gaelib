@@ -1,7 +1,6 @@
 from gaelib.tests.auth.base import BaseAuthUnitTestCase
 from gaelib.auth.models import User
 from gaelib.auth import views
-from gaelib.utils import web
 from flask import g
 import base64
 import json

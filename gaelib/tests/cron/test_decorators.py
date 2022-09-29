@@ -1,6 +1,5 @@
 from gaelib.tests.base import BaseUnitTestCase
 from gaelib.cron.decorators import cron_validate
-from werkzeug.exceptions import HTTPException
 from mock import Mock
 import json
 
